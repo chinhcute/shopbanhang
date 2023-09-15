@@ -1,0 +1,139 @@
+ header{
+      min-width: 1000px;
+      background-image: linear-gradient(180deg, rgb(236, 18, 18), rgb(235, 99, 15));
+      height: 150px;
+      padding: 0 100px;
+
+    }
+
+    header .nav_one{
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .header__phai ul,
+.header__trai ul{
+    display: flex;
+
+
+
+}
+
+ *{
+      margin: 0px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+.header__item--gach::after{
+    content: " ";
+    display: block;
+    height: 8px;
+    width: 1px;
+    background-color: #c7bcb9;
+}
+.header__item{
+       list-style: none;
+}
+.header__item a{
+
+    margin-left: 19px;
+    color: aliceblue;
+    text-decoration: none;
+}
+.header__phai{
+    margin-right: 50px;
+}
+.header__item a:hover{
+    color: rgb(186, 183, 179);
+    cursor: pointer;
+}
+
+.header__item--gach::after{
+    content: " ";
+    display: block;
+    height: 15px;
+    width: 1px;
+    background-color: #baafac;
+    position: relative;
+    left: 140px;
+    transform: translateY(-16px);
+}
+
+.header__item--gach1::after{
+    content: " ";
+    display: block;
+    height: 15px;
+    width: 1px;
+    background-color: #baafac;
+    position: relative;
+    left: 230px;
+    transform: translateY(-16px);
+}
+.header__item--gach2::after{
+    content: " ";
+    display: block;
+    height: 15px;
+    width: 1px;
+    background-color: #baafac;
+    position: relative;
+    left: 120px;
+    transform: translateY(-16px);
+}
+.header__item--gach3::after{
+    content: " ";
+    display: block;
+    height: 15px;
+    width: 1px;
+    background-color: #baafac;
+    position: relative;
+    left: 80px;
+    transform: translateY(-16px);
+}
+   .headerimage img{
+    width: 120px;
+   }
+   .image_search{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 60px;
+
+   }
+   .header_icon a i{
+    font-size: 30px;
+    color: aliceblue;
+    margin-top: 30px;
+   }
+   .nav_product ul{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 8px;
+    position: relative;
+    left: -50px;
+
+
+   }
+   .product a{
+    color: aliceblue;
+    text-decoration: none;
+
+   }
+   .product {
+
+    list-style: none;
+    text-decoration: none;
+   }
+   .btn{
+    margin-left: 30px;
+
+   }
+
+   .nav_product li :hover{
+    color: rgb(203, 131, 102);
+
+   }
+   body {
+  display: flex;
+  flex-direction: column;
+
+}

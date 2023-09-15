@@ -1,0 +1,44 @@
+ *{
+            margin: 0px;
+
+
+                        font-family: Arial, Helvetica, sans-serif;
+
+
+
+          }
+
+          header{
+            min-width: 1000px;
+            background-image: linear-gradient(180deg, rgb(236, 18, 18), rgb(235, 99, 15));
+            height: 150px;
+            padding: 0 100px;
+            display: flex;
+
+          }
+          header img{
+              width: 200px;
+          }
+          header h2{
+              color: aliceblue;
+              margin: auto 40px;
+          }
+          main{
+              height: 650px;
+          }
+          .add_account{
+              display: flex;
+
+          }
+
+
+
+
+
+
+
+         footer{
+          height: 300px;
+          min-width: 100%;
+          background-image: linear-gradient(0deg, rgb(236, 18, 18), rgb(235, 99, 15));
+         }
