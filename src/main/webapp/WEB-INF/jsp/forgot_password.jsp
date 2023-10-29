@@ -80,6 +80,10 @@
                    <div style = "color: red;" role="alert" >
                        ${error}
                    </div>
+                    <div style = "color: red;" role="alert" >
+                                          ${errorMessage}
+                      </div>
+
                    <button type="submit" class="btn btn-primary">Xác thực</button>
                </form>
 

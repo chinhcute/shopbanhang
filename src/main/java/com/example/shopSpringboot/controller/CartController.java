@@ -68,39 +68,56 @@ public class CartController {
     @RequestMapping(value = "/user/carts/{id}")
     public String save_cart(@PathVariable int id, Model model) {
         Optional<ProductEntity> product = productRepository.findById(id);
+
         ProductEntity productEntity = product.get();
         Object authen = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = authen.toString();
+
         if (authen instanceof UserDetails){
             email = ((UserDetails) authen).getUsername();
         }
 
         CartEntity cart = cartRepository.findByCart(email);
-        if (cart == null) {
+
+        if (cart != null ) {
+            boolean check = false;
+
+            for (CartItemEntity cartItem : cart.getCartItemEntityList()){
+                if (cartItem.getProduct().getId() == id){
+                    cartItem.setQuantity(cartItem.getQuantity() +1);
+                    double total_All_amount = cartItem.getProduct().getTotalAmount() * cartItem.getQuantity();
+                    cartItem.setTotalAllAmount(total_All_amount);
+
+                    cartItemsRepository.save(cartItem);
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                CartItemEntity cartItemEntity = new CartItemEntity();
+                cartItemEntity.setCart(cart);
+                cartItemEntity.setProduct(productEntity);
+                cartItemEntity.setQuantity(1);
+
+                double total_All_amount = cartItemEntity.getProduct().getTotalAmount() * cartItemEntity.getQuantity();
+                cartItemEntity.setTotalAllAmount(total_All_amount);
+
+                cartItemsRepository.save(cartItemEntity);
+                System.out.println("ok");
+            }
+
+
+
+
+        } else {
             CartEntity cartEntity = new CartEntity();
             AccountEntity accountEntity = accountRepository.findByEmailLike(email);
             cartEntity.setUser(accountEntity);
             cartRepository.save(cartEntity);
-            cart = cartEntity;
-        }
 
-        boolean check = false;
 
-        for (CartItemEntity cartItem : cart.getCartItemEntityList()){
-            if (cartItem.getProduct().getId() == id){
-                cartItem.setQuantity(cartItem.getQuantity() +1);
-                double total_All_amount = cartItem.getProduct().getTotalAmount() * cartItem.getQuantity();
-                cartItem.setTotalAllAmount(total_All_amount);
-
-                cartItemsRepository.save(cartItem);
-                check = true;
-                break;
-            }
-        }
-
-        if (!check) {
             CartItemEntity cartItemEntity = new CartItemEntity();
-            cartItemEntity.setCart(cart);
+            cartItemEntity.setCart(cartEntity);
             cartItemEntity.setProduct(productEntity);
             cartItemEntity.setQuantity(1);
 
@@ -108,8 +125,8 @@ public class CartController {
             cartItemEntity.setTotalAllAmount(total_All_amount);
 
             cartItemsRepository.save(cartItemEntity);
-            System.out.println("ok");
         }
+
 
         return "redirect:/user/cart";
     }

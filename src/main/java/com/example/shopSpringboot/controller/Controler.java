@@ -4,6 +4,8 @@ import com.example.shopSpringboot.Enum.Role;
 import com.example.shopSpringboot.Enum.Sex;
 
 import com.example.shopSpringboot.Enum.UserStatus;
+
+import com.example.shopSpringboot.confi.EmailSendingException;
 import com.example.shopSpringboot.confi.SecurityConfig;
 import com.example.shopSpringboot.entity.*;
 import com.example.shopSpringboot.repository.*;
@@ -21,11 +23,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessageRemovedException;
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -266,29 +270,41 @@ public class Controler  {
         return "forgot_password";
     }
     @RequestMapping(value = "/forgot_passwords", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Exception.class)
+
     public String forgot_passwords(@RequestParam String email, Model model, HttpSession httpSession) throws MessagingException {
-        AccountEntity account = accountRepository.findByEmailLike(email);
-        if (account == null){
+        try {
+            AccountEntity account = accountRepository.findByEmailLike(email);
+            if (account == null){
 
-            model.addAttribute("error", "Không có tài khoản này");
-            return "forgot_password";
+                model.addAttribute("error", "Không có tài khoản này");
+                return "forgot_password";
+            }
+            Random random = new Random();
+            int so = random.nextInt(10000);
+            String numbers = String.valueOf(so);
+
+
+
+            String emailSubject = "Xác thực địa chỉ email";
+            String emailContent = "Chào bạn,<br>" +
+                    "Đây là mã xác thực của bạn: " + numbers + "<br>" +
+                    "Sử dụng mã này để hoàn tất quá trình xác thực địa chỉ email của bạn.<br>" +
+                    "Trân trọng,<br>" +
+                    "Nhóm hỗ trợ của chúng tôi";
+            emailService.sendEmail(email, emailSubject, emailContent);
+
+            httpSession.setAttribute("numbers",numbers);
+            httpSession.setAttribute("account_email", account);
+            model.addAttribute("accuracy", "/accuracy_email");
+            return "accuracy";
+        }catch (MessagingException e) {
+            e.printStackTrace();
+            throw new EmailSendingException("Không thể gửi email xác thực. Vui lòng thử lại sau.");
         }
-        Random random = new Random();
-        int so = random.nextInt(10000);
-        String numbers = String.valueOf(so);
 
 
-        String emailSubject = "Xác thực địa chỉ email";
-        String emailContent = "Chào bạn,<br>" +
-                "Đây là mã xác thực của bạn: " + numbers + "<br>" +
-                "Sử dụng mã này để hoàn tất quá trình xác thực địa chỉ email của bạn.<br>" +
-                "Trân trọng,<br>" +
-                "Nhóm hỗ trợ của chúng tôi";
-        emailService.sendEmail(email, emailSubject, emailContent);
-        httpSession.setAttribute("numbers",numbers);
-        httpSession.setAttribute("account_email", account);
-        model.addAttribute("accuracy", "/accuracy_email");
-        return "accuracy";
+
     }
     @RequestMapping(value = "/accuracy_email" , method = RequestMethod.POST)
     public String accuracy_email(@RequestParam String input, HttpServletRequest request, Model model, HttpSession session){

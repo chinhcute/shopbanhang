@@ -15,11 +15,8 @@ public class QrController {
 
     @RequestMapping (value = "/pr")
     public String qr(Model model){
-        String text = "Tên sản phẩm : \n"+
-                    "Người bán : \n" +
-                    "Gia gốc : \n" +
-                    "giảm giá : " + "% \n"+
-                    "Giá :";
+        String text = "https://docs.google.com/document/d/1-q5G2sbkKPBWJH3HfU1u4ljSqewPP9qD/edit?usp=sharing&ouid=114267454989157545758&rtpof=true&sd=true";
+
         byte[] bytes =qrService.generateQRCode(text);
 
 
